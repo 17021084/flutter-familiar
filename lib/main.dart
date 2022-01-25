@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_familiar/touchable_opacity_button.dart';
+
+import 'card_name.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +32,29 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Index 0: Home',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 1: Business',
+      style: optionStyle,
+    ),
+    Text(
+      'Index 2: School',
+      style: optionStyle,
+    ),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -56,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             const Text(
               'You have pushed the button this many times:',
@@ -78,16 +104,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     //   left: BorderSide(width: 10, color: Colors.red),
                     //   right: BorderSide(width: 10, color: Colors.red),
                     // ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
                     border: Border.all(color: Colors.yellow, width: 30),
                     borderRadius: BorderRadius.circular(13)),
-                child: Text("Reset"),
+                child: const Text("Reset"),
               ),
             ),
             FloatingActionButton(
                 onPressed: _decrementCounter,
                 tooltip: "Decrement",
                 child: const Icon(Icons.remove)),
-            CardName(),
+            const CardName(),
+            TouchAbleOpacityButton(
+              handleOnPress: () => {print("pass function in state less")},
+            ),
           ],
         ),
       ),
@@ -95,37 +132,28 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class CardName extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(50))),
-          child: const CircleAvatar(
-            radius: 48,
-            backgroundImage: NetworkImage(
-                "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/mg7hzw3astat1wezn5xe"),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation
+          .centerFloat, // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'School',
           ),
-        ),
-        Container(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const [
-            Text(
-              "Trang Van A",
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            )
-          ],
-        ))
-      ],
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'School',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'School',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
     );
   }
 }
